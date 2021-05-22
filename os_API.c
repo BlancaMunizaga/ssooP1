@@ -11,7 +11,7 @@ correspondiente al disco y tambien guarda como variable global la partición a m
 
 void os_mount(char *diskname, int partition)
 {
-    printf("os_mount");
+    printf("os_mount\n");
     file_name = diskname;
     disco = fopen(diskname, "r+b");
 
@@ -27,7 +27,7 @@ void os_mount(char *diskname, int partition)
     int primer_byte = buffer_entrada;
     if (primer_byte < 127)
     {
-        printf('partición no valida');
+        printf('partición no valida\n');
     }
     else
     {
@@ -42,17 +42,17 @@ void os_mount(char *diskname, int partition)
 
 void os_bitmap(unsigned num)
 {
-    printf("os_bitmap");
+    printf("os_bitmap\n");
 }
 
 int os_exists(char *filename)
 {
-    printf("os_exists");
+    printf("os_exists\n");
 }
 
 void os_ls()
 {
-    printf("os_ls");
+    printf("os_ls\n");
 }
 
 /*FUNCIONES MASTER BOOT*/
@@ -60,10 +60,11 @@ void os_ls()
 void os_mbt()
 {
 
-    printf("os_mbt");
-    for (int i = 0; i < 128; i++)
+    printf("os_mbt\n");
+    // Recorrer todas las particiones
+    for (int id = 0; id < 128; id++)
     {
-        fseek(disco, 8 * i, SEEK_SET); // Primer byte de la entrada validez+id_puntero
+        fseek(disco, 8 * id, SEEK_SET); // Primer byte de la entrada validez+id_puntero
         fread(buffer_entrada, sizeof(buffer_entrada), 1, disco);
         int primer_byte = buffer_entrada;
         if (primer_byte < 127)
@@ -72,30 +73,34 @@ void os_mbt()
         }
         else
         {
-            // imprimir
+            // sacar info de particion.
             fread(id_absoluto_particion, sizeof(id_absoluto_particion), 1, disco);
             fread(cantidad_bloques_particion, sizeof(cantidad_bloques_particion), 1, disco);
+            int id_abs = id_absoluto_particion;
+            int cantidad_bloques = cantidad_bloques_particion;
+            // mostrar info de particion en consola.
+            printf("id: %i,  id absoluto: %i,  cantidad de bloques: %i\n", id, id_abs, cantidad_bloques);
         }
     }
 }
 
 void os_create_partition(int id, int size)
 {
-    printf("os_create_partition");
+    printf("os_create_partition\n");
 }
 
 void os_delete_partition(int id)
-// Restarle 127 al int que representa el primer byte de la entrada en la MBT
 {
     fseek(disco, 8 * id, SEEK_SET); // Primer byte de la entrada validez+id_puntero
     fread(buffer_entrada, sizeof(buffer_entrada), 1, disco);
     int primer_byte = buffer_entrada;
     if (primer_byte < 127)
     {
-        printf('partición no valida');
+        printf('partición no valida\n');
     }
     else
     {
+        fseek(disco, -1, SEEK_CUR);
         primer_byte -= 128;
         fputc(primer_byte, disco);
     }
@@ -104,6 +109,11 @@ void os_delete_partition(int id)
 void os_reset_mbt()
 {
     printf("os_reset_mbt");
+    /* recorremos todas las entradas y llamamos a delete_partition por cada una*/
+    for (int id = 0; id < 128; id++)
+    {
+        os_delete_partition(id);
+    }
 }
 
 // extra
