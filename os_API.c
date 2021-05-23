@@ -61,55 +61,68 @@ void os_bitmap(unsigned num)
 
     //int bitmap;
     unsigned char buffer_byte[1];
-    if (num != 0)
+    if (num != 0 && num <= cantidad_bloques_bitmap)
     {
         //avazamos hasta el incio de la partición y luego avanzamos hacia el incio del bloque de bitmap
         fseek(disco, inicio_particion + num * 2048, SEEK_SET);
         for (int byte = 0; byte < 2048; byte++)
         {
             fread(buffer_byte, sizeof(buffer_byte), 1, disco);
+            fprintf(stderr, "%x", buffer_byte);
+            if (byte != 0 && byte % 4 == 0)
+            {
+                fprintf(stderr, "\n");
+            }
+            for (int contador_shift = 7; contador_shift > 0; contador_shift--)
+            {
+                unsigned char *aux_buffer = *buffer_byte;
+                int aux2_buffer = aux_buffer;
+                int bit;
+                bit = aux2_buffer >> contador_shift;
+                if (bit == 1)
+                {
+                    ocupados++;
                 }
-        //
-        // int byte = num / 8;
-        // int bit = num % 8;
-
-        // fprintf(stderr, "%d \n", block);
-        // fseek(disk, 1024 * (block - 1), SEEK_CUR);
-        // for (int i = 0; i < 1024; i++)
-        // {
-        //   fread(&bitmap, 1, 1, disk);
-        //    for (int j = 1; j > -1; j--)
-        //   {
-        //        uint16_t bitmap2 = bitmap;
-        //        fprintf(stderr, "%x", (bitmap2 >> j * 4) & 0x0F);
-        //    }
-        //    if (i % 2)
-        //    {
-        //       fprintf(stderr, "\n");
-        //   }
-        //}
+                else
+                {
+                    libres++;
+                }
+            }
+        }
+        fprintf(stderr, "\n");
+        fprintf(stderr, "bloques ocupados: %i \n", ocupados);
+        fprintf(stderr, "bloques libres: %i \n", libres);
     }
     else if (num == 0)
     {
-        //fprintf(stderr, "pass");
-        //for (uint32_t i = 0; i < 1024 * 128; i++)
-        //{
-        //    fread(&bitmap, 1, 1, disk);
-        //    for (int j = 1; j > -1; j--)
-        //    {
-        //        uint16_t bitmap2 = bitmap;
-        //        fprintf(stderr, "%x", (bitmap2 >> j * 4) & 0x0F);
-        //        ocupied += (bitmap2 >> j * 4) & 0x0F;
-        //        free = 128 * 1024 - ocupied;
-        //    }
-
-        //    if (i % 2)
-        //    {
-        //        fprintf(stderr, "\n");
-        //    }
-        //}
-        //fprintf(stderr, "ocupied: %u\n", ocupied);
-        //fprintf(stderr, "free: %u\n", free);
+        fseek(disco, inicio_particion + 2048, SEEK_SET);
+        for (int byte = 0; byte < 2048 * cantidad_bloques_bitmap; byte++)
+        {
+            fread(buffer_byte, sizeof(buffer_byte), 1, disco);
+            fprintf(stderr, "%x", buffer_byte);
+            if (byte != 0 && byte % 4 == 0)
+            {
+                fprintf(stderr, "\n");
+            }
+            for (int contador_shift = 7; contador_shift > 0; contador_shift--)
+            {
+                unsigned char *aux_buffer = *buffer_byte;
+                int aux2_buffer = aux_buffer;
+                int bit;
+                bit = aux2_buffer >> contador_shift;
+                if (bit == 1)
+                {
+                    ocupados++;
+                }
+                else
+                {
+                    libres++;
+                }
+            }
+        }
+        fprintf(stderr, "\n");
+        fprintf(stderr, "bloques ocupados: %i \n", ocupados);
+        fprintf(stderr, "bloques libres: %i \n", libres);
     }
     else
     {
@@ -131,7 +144,7 @@ int os_exists(char *filename)
             unsigned char nombre_archivo[28];
             fread(id_relativo_bloque_indice, sizeof(id_relativo_bloque_indice), 1, disco);
             fread(nombre_archivo, sizeof(nombre_archivo), 1, disco);
-            if (strcmp(nombre_archivo, filename, 32)) // Se compara el nombre del archivo con el que se busca.
+            if (strcmp(nombre_archivo, filename)) // Se compara el nombre del archivo con el que se busca.
             {
                 return 1; // Si son iguales se retorna 1
             }
@@ -240,7 +253,7 @@ int os_rm(char *filename)
             unsigned char nombre_archivo[28];
             fread(id_relativo_bloque_indice, sizeof(id_relativo_bloque_indice), 1, disco);
             fread(nombre_archivo, sizeof(nombre_archivo), 1, disco);
-            if (strcmp(nombre_archivo, filename, 32)) // Se compara el nombre del archivo con el que se busca.
+            if (strcmp(nombre_archivo, filename)) // Se compara el nombre del archivo con el que se busca.
             {
                 fseek(disco, inicio_particion + 32 * entrada, SEEK_SET);
                 fputc(0, disco); // se cambia el bit de validez a 0.
