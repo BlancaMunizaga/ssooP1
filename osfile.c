@@ -33,10 +33,10 @@ osFile *os_open(char *filename, char mode)
 
     if (mode = "r")
     {
-        osfile->mode = 0;
         if (exists)
         {
             osFile *osfile = malloc(sizeof(osFile));
+            osfile->mode = 0;
             osfile->pos_indice = pos_indice;
 
             fseek(disco, pos_indice, SEEK_SET);
@@ -44,7 +44,7 @@ osFile *os_open(char *filename, char mode)
             fread(tamaño_archivo, sizeof(tamaño_archivo), 1, disco);
             tamaño = tamaño_archivo[0] + (tamaño_archivo[1] << 8) + (tamaño_archivo[2] << 16) + (tamaño_archivo[3] << 24) + (tamaño_archivo[3] << 32);
             osfile->tamaño = tamaño_archivo;
-            return osfile
+            return osfile;
         }
         else
         {
@@ -54,7 +54,7 @@ osFile *os_open(char *filename, char mode)
     }
     else if (mode = "w")
     {
-        osfile->mode = 1;
+
         if (exists)
         {
             printf("ERROR: Archivo con ese nombre ya existe.\n");
@@ -63,13 +63,15 @@ osFile *os_open(char *filename, char mode)
         else
         {
             osFile *osfile = malloc(sizeof(osFile));
+            osfile->mode = 1;
             osfile->pos_indice = pos_indice;
 
             fseek(disco, pos_indice, SEEK_SET);
             unsigned char tamaño_archivo[5];
             fread(tamaño_archivo, sizeof(tamaño_archivo), 1, disco);
             tamaño = tamaño_archivo[0] + (tamaño_archivo[1] << 8) + (tamaño_archivo[2] << 16) + (tamaño_archivo[3] << 24) + (tamaño_archivo[3] << 32);
-            osfile->tamaño = tamaño_archivo return osfile
+            osfile->tamaño = tamaño_archivo;
+            return osfile;
         }
     }
 }
@@ -81,11 +83,11 @@ int os_read(osFile *file_desc, void *buffer, int nbytes)
     int bytes_leidos = 0;
     if (bytes_r_w + nbytes <= tamaño)
     {
-        for (i = 0; i < nbytes; i++)
+        for (int i = 0; i < nbytes; i++)
         {
             int numero_bloque_datos = bloque_de_datos(bytes_r_w);
             fseek(disco, file_desc->pos_indice + 5 + numero_bloque_datos * 3, SEEK_SET);
-            unsinged char puntero[3];
+            unsigned char puntero[3];
             fread(puntero, sizeof(puntero), 1, disco);
             int pos_bloque_datos;
             pos_bloque_datos = puntero[0] + (puntero[1] << 8) + (puntero[2] << 16);
@@ -94,10 +96,10 @@ int os_read(osFile *file_desc, void *buffer, int nbytes)
             fseek(disco, inicio_particion + pos_bloque_datos + pos_byte, SEEK_SET);
             fread(buffer[i], 1, 1, disco);
             bytes_r_w += 1;
-            bytes_leidos++
+            bytes_leidos++;
         }
     }
-    return bytes_leidos
+    return bytes_leidos;
 }
 
 int os_write(osFile *file_desc, void *buffer, int nbytes)
@@ -107,11 +109,11 @@ int os_write(osFile *file_desc, void *buffer, int nbytes)
     int bytes_leidos = 0;
     if (bytes_r_w + nbytes <= tamaño)
     {
-        for (i = 0; i < nbytes; i++)
+        for (int i = 0; i < nbytes; i++)
         {
         }
     }
-    return bytes_leidos
+    return bytes_leidos;
 }
 
 int os_close(osFile *file_desc)
