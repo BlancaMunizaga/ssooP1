@@ -42,7 +42,7 @@ osFile *os_open(char *filename, char mode)
             fseek(disco, pos_indice, SEEK_SET);
             unsigned char tamaño_archivo[5];
             fread(tamaño_archivo, sizeof(tamaño_archivo), 1, disco);
-            tamaño = tamaño_archivo[0] + (tamaño_archivo[1] << 8) + (tamaño_archivo[2] << 16) + (tamaño_archivo[3] << 24) + (tamaño_archivo[3] << 32);
+            int tamaño = tamaño_archivo[0] + (tamaño_archivo[1] << 8) + (tamaño_archivo[2] << 16) + (tamaño_archivo[3] << 24) + (tamaño_archivo[3] << 32);
             osfile->tamaño = tamaño_archivo;
             return osfile;
         }
@@ -69,7 +69,7 @@ osFile *os_open(char *filename, char mode)
             fseek(disco, pos_indice, SEEK_SET);
             unsigned char tamaño_archivo[5];
             fread(tamaño_archivo, sizeof(tamaño_archivo), 1, disco);
-            tamaño = tamaño_archivo[0] + (tamaño_archivo[1] << 8) + (tamaño_archivo[2] << 16) + (tamaño_archivo[3] << 24) + (tamaño_archivo[3] << 32);
+            int tamaño = tamaño_archivo[0] + (tamaño_archivo[1] << 8) + (tamaño_archivo[2] << 16) + (tamaño_archivo[3] << 24) + (tamaño_archivo[3] << 32);
             osfile->tamaño = tamaño_archivo;
             return osfile;
         }
@@ -94,7 +94,7 @@ int os_read(osFile *file_desc, void *buffer, int nbytes)
 
             int pos_byte = bytes_r_w - 2048 * numero_bloque_datos;
             fseek(disco, inicio_particion + pos_bloque_datos + pos_byte, SEEK_SET);
-            fread(buffer[i], 1, 1, disco);
+            fread(buffer, 1, 1, disco);
             bytes_r_w += 1;
             bytes_leidos++;
         }
@@ -125,12 +125,12 @@ int os_close(osFile *file_desc)
 int bloque_de_datos(int byte_r_w)
 // cantidad de bitmaps requeridos para una particion de tamaño
 {
-    if (n_bloques % 2048 == 0)
+    if (byte_r_w % 2048 == 0)
     {
-        return (n_bloques / 2048) - 1;
+        return (byte_r_w / 2048) - 1;
     }
     else
     {
-        return (n_bloques / 2048);
+        return (byte_r_w / 2048);
     }
 }
