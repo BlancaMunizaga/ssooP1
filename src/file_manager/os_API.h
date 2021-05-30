@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 /* General */
 
 char *file_name;
@@ -20,6 +21,10 @@ unsigned char buffer_entrada[1];
 int inicio_particion;
 
 int cantidad_bloques_bitmap;
+
+int is_valid(int primer_byte_entrada);
+
+int cantidad_de_bitmaps(int n_bloques);
 
 void os_mount(char *diskname, int partition);
 

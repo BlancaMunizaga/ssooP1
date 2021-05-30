@@ -12,11 +12,12 @@ struct osfile
     // pos absoluta del bloque indice
     int pos_indice;
     // tamaño del archivo
-    int tamaño;
+    long int tamano;
     // pos de lectura o escritura dentro del archivo
-    int bytes_r_w
+    int bytes_r_w;
 };
 
+int bloque_de_datos(int byte_r_w);
 osFile *os_open(char *filename, char name);
 int os_read(osFile *file_desc, void *buffer, int nbytes);
 int os_write(osFile *file_desc, void *buffer, int nbytes);

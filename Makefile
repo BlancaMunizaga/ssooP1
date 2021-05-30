@@ -48,7 +48,7 @@ LIB=$(MTH)
 COMMON=file_manager
 
 # Directorios que serán compilados a un programa
-PROGRAMS=crtree
+PROGRAMS=main
 
 # Todos los directorios que contienen archivos de código
 SRCDIR=$(COMMON) $(PROGRAMS)
