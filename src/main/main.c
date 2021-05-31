@@ -6,5 +6,8 @@
 
 int main(int argc, char** argv)
 {
-    os_mount("discos/simdiskfilled.bin", 1);
+    os_mount("src/discos/simdiskfilled.bin", 1);
+    os_mbt();
+    os_ls();
+    fclose(disco);
 }

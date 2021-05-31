@@ -15,6 +15,10 @@ void os_mount(char *diskname, int partition)
     printf("os_mount\n");
     file_name = diskname;
     disco = fopen(diskname, "r+b");
+    if(disco == NULL){
+        printf("File did not open!\n");
+    }
+        
 
     id_particion = partition;
 
@@ -32,7 +36,7 @@ void os_mount(char *diskname, int partition)
     }
     else
     {
-        printf("partición valida");
+        printf("partición valida\n");
         // Leyendo 3 bytes para encontrar el id_absoluto_particion y se guarda en la variable global
         fread(id_absoluto_particion, sizeof(id_absoluto_particion), 1, disco);
         // Leyendo 4 bytes para encontrar la cantidad de bloques de la particion y se guarda en variable global
@@ -43,6 +47,12 @@ void os_mount(char *diskname, int partition)
         inicio_particion = id_abs + 1024;
         // Leyendo cantidad de bloques bitmap y guardando en variable global
         cantidad_bloques_bitmap = cantidad_de_bitmaps(cantidad_bloques);
+
+        printf("Id abs: %i\n", id_abs);
+        printf("cantidad bloques: %i\n", cantidad_bloques);
+        printf("Inicio partición: %i\n", inicio_particion);
+        printf("Cantidad de bloques bitmap: %i\n", cantidad_bloques_bitmap);
+
     }
 
     fseek(disco, 1, SEEK_CUR); // segundo byte
@@ -68,7 +78,7 @@ void os_bitmap(unsigned num)
         for (int byte = 0; byte < 2048; byte++)
         {
             fread(buffer_byte, sizeof(buffer_byte), 1, disco);
-            fprintf(stderr, "%hhn", buffer_byte);
+            fprintf(stderr, "%x", (int) buffer_byte[0]);
             if (byte != 0 && byte % 4 == 0)
             {
                 fprintf(stderr, "\n");
@@ -99,7 +109,7 @@ void os_bitmap(unsigned num)
         for (int byte = 0; byte < 2048 * cantidad_bloques_bitmap; byte++)
         {
             fread(buffer_byte, sizeof(buffer_byte), 1, disco);
-            fprintf(stderr, "%hhn", buffer_byte);
+            fprintf(stderr, "%x", (int) buffer_byte[0]);
             if (byte != 0 && byte % 4 == 0)
             {
                 fprintf(stderr, "\n");
@@ -155,12 +165,14 @@ int os_exists(char *filename)
 
 void os_ls()
 {
-    for (int entrada; entrada < 64; entrada++) // Se recorre cada entrada del bloque directorio.
+    for (int entrada = 0; entrada < 64; entrada++) // Se recorre cada entrada del bloque directorio.
     {
         fseek(disco, inicio_particion + 32 * entrada, SEEK_SET);
         unsigned char byte_validez[1];
         fread(byte_validez, sizeof(byte_validez), 1, disco);
+        printf("Byte validez: %hhn\n", byte_validez);
         int validez = (int)byte_validez[0];
+        printf("Validez: %i\n", validez);
         if (validez) // Si la entrada es valida.
         {
             unsigned char id_relativo_bloque_indice[3];
@@ -169,7 +181,7 @@ void os_ls()
             fread(id_relativo_bloque_indice, sizeof(id_relativo_bloque_indice), 1, disco);
             fread(nombre_archivo, sizeof(nombre_archivo), 1, disco);
 
-            printf("%s", nombre_archivo); // Se muestra en consola el nombre del archivo.
+            printf("Nombre archivo: %s", nombre_archivo); // Se muestra en consola el nombre del archivo.
         }
     }
 }
