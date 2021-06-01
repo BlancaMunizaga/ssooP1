@@ -16,7 +16,7 @@ correspondiente al disco y tambien guarda como variable global la partición a m
 void os_mount(char *diskname, int partition)
 {
     file_name = diskname;
-    disco = fopen(diskname, "r+b");
+    disco = fopen(diskname, "rb+");
     if(disco == NULL){
         printf("File did not open!\n");
     }
@@ -276,15 +276,14 @@ void os_create_partition(int id, int size)
             Particion * partition = process_init(pid, id_abs, cantidad_bloques);
             sortedInsert(lista_particiones, partition);
         }
-        Particion * partition = process_init(0, 2097152, 0); // final del disco
-        sortedInsert(lista_particiones, partition);
-
     }
+    Particion * partition = process_init(0, 2097152, 0); // final del disco
+    sortedInsert(lista_particiones, partition);
     id += 128;
     Particion * current = lista_particiones -> head;
     int pos = 0;
     bool seguir = true;
-    while (current != NULL)
+    while (current != NULL && seguir)
     {
         if(current->id_abs - pos >= size){
             seguir = false;
@@ -301,12 +300,18 @@ void os_create_partition(int id, int size)
             bytes[5] = (size >> 16) & 0xff;
             bytes[4] = (size >> 24) & 0xff;
 
+            fclose(disco);
+            disco = fopen(file_name, "wb+");
             fseek(disco, pos_libre_mbt, SEEK_SET);
 
             for(int i=0; i < 8; i++){
-                fputc(bytes[i], disco);
+                printf("byte: %i", (int) bytes[i]);
+                printf("bite que se esta escribiendo: %i", i);
+                fputc((int) bytes[i], disco);
+
             }
-            break;
+            fclose(disco);
+            disco = fopen(file_name, "r+b");
         }
         pos = current->id_abs + current -> cantida_de_bloques + 1;
         current = current->next;
