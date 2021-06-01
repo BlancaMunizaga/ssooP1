@@ -26,6 +26,10 @@ int cantidad_bloques_bitmap;
 
 int is_valid(int primer_byte_entrada);
 
+int pos_mbt_particion(int id_particion);
+
+int pos_libre_mbt();
+
 int cantidad_de_bitmaps(int n_bloques);
 
 void os_mount(char *diskname, int partition);
