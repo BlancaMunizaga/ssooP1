@@ -22,7 +22,7 @@ struct lista
     Particion *tail;
 };
 
-Particion *process_init(int id, int id_abs, int cantidad_de_bloques);
+Particion *process_init(int id, long int id_abs, int cantidad_de_bloques);
 /** Inicializa una lista vacía */
 Lista *lista_init();
 void sortedInsert(Lista *list, Particion *new_particion);

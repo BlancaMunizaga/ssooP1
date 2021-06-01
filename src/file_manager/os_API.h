@@ -8,6 +8,8 @@ FILE *disco;
 
 int id_particion;
 
+int particion_valida;
+
 unsigned char id_absoluto_particion[3];
 
 unsigned char cantidad_bloques_particion[4];
