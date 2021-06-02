@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     // }
     
     //Montamos la segunda particion
-    os_mount("src/discos/simdisk.bin", 2);
+    os_mount("src/discos/simdisk.bin", 0);
     // printf("Disco antes de la nueva particion: \n");
     // //Imprimimos la mbt
     // os_mbt();
@@ -33,10 +33,10 @@ int main(int argc, char** argv)
     // os_bitmap(0);
     
     //Creamos la particion
-    printf("Disco después de la nueva particion: \n");
-    os_create_partition(6, 4000);
-    //Imprimimos la mbt
-    os_mbt();
+    // printf("Disco después de la nueva particion: \n");
+    // os_create_partition(6, 4000);
+    // //Imprimimos la mbt
+    // os_mbt();
     //Borramos la particion
     //os_delete_partition(6);
     //Volvemos a imprimir la mbt

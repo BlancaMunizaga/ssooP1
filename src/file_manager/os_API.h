@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <stdlib.h>
 /* General */
@@ -25,6 +26,8 @@ int inicio_particion;
 int cantidad_bloques_bitmap;
 
 int is_valid(int primer_byte_entrada);
+
+int id_valido(int id);
 
 int pos_mbt_particion(int id_particion);
 

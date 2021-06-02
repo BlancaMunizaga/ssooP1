@@ -7,7 +7,7 @@
 #include <stdbool.h>
 
 
-extern OS_ERROR errno;
+OS_ERROR errno;
 
 /*FUNCIONES GENERALES*/
 /* 
@@ -260,12 +260,13 @@ void os_create_partition(int id, int size)
 {
     printf("Creando particion de id[%i] y size: %i\n", id, size);
 
-    if (id > 127){   // El id es invalido.
+    if (!id_valido(id)){   // El id es invalido.
         // printf("El id no es valido.\n");
         errno = 7;
         os_strerror(errno);
         return;
     }
+
     int pos_libre = pos_libre_mbt();
     if (pos_libre < 0){     // La MBT esta llena (no necesariamente el disco).
         errno = 5;
@@ -306,6 +307,7 @@ void os_create_partition(int id, int size)
 
             }
             printf("Particion creada correctamente.\n");
+            lista_destroy(lista_particiones);
             return;
         }
         pos = current->id_abs + current -> cantida_de_bloques + 1;
@@ -455,7 +457,6 @@ Lista * crear_lista_particiones(){
 
 int pos_libre_mbt(){
     // Busca una entrada libre en la MBT
-    Lista * lista_particiones = lista_init(); 
     for (int i = 0; i < 128; i++)
     {
         fseek(disco, 8 * i, SEEK_SET); 
@@ -467,4 +468,24 @@ int pos_libre_mbt(){
         }
     }
     return -1;  // Si no hay retorna -1
+}
+
+int id_valido(int id){
+    // Busca una entrada libre en la MBT
+    if (id > 127){   // El id es invalido.
+        return 0;
+    }
+    for (int i = 0; i < 128; i++)
+    {
+        fseek(disco, 8 * i, SEEK_SET); 
+        fread(buffer_entrada, sizeof(buffer_entrada), 1, disco);
+        int primer_byte = buffer_entrada[0];
+        if (primer_byte > 127)  // Particion Valida.
+        {
+            if(primer_byte - 128 == id){
+                return 0;
+            } 
+        }
+    }
+    return 1;  // Si no hay retorna -1
 }

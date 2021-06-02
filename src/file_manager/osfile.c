@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include "error.h"
 
-extern OS_ERROR errno;
+OS_ERROR errno;
 
 int find_pos_indice_block(char *filename)
 {
@@ -94,7 +94,7 @@ int os_read(osFile *file_desc, unsigned char *buffer, int nbytes)
     if (file_desc -> mode != 0){ // Error por modo incorrecto
         errno = 9;
         os_strerror(errno);
-        return NULL;
+        return -1;
     }
     int tamano = file_desc->tamano;
     int bytes_r_w = file_desc->bytes_r_w;
@@ -152,7 +152,7 @@ int os_write(osFile *file_desc, unsigned char *buffer, int nbytes)
     if (file_desc -> mode != 1){ // Error por modo incorrecto
         errno = 9;
         os_strerror(errno);
-        return NULL;
+        return -1;
     }
     // ver si cabe lo que se quiere escrir
     // 1 ver cuantos bloques datos va a usar + bloque indece < cantidad bloques libres y verificar que cabe en el bloque directorio
