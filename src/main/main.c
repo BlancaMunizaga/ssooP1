@@ -35,7 +35,7 @@ int main(int argc, char** argv)
     //os_mbt();
     //os_ls();
 
-    os_mount("src/discos/simdisk.bin", 2);
+    os_mount("src/discos/simdisk.bin", 4);
     osFile * file_desc = os_open("nene.txt", 'r');
     unsigned char buffer[file_desc->tamano];
     
