@@ -35,18 +35,17 @@ int main(int argc, char** argv)
     //os_mbt();
     //os_ls();
 
-    os_mount("src/discos/simdisk.bin", 4);
-    osFile * file_desc = os_open("pepeloni.txt", 'r');
+    os_mount("src/discos/simdisk.bin", 2);
+    osFile * file_desc = os_open("nene.txt", 'r');
     unsigned char buffer[file_desc->tamano];
     
     int bytes_leidos = os_read(file_desc, buffer, file_desc->tamano);
-    FILE* prueba = fopen("prueba.txt", "wb+");
+    FILE* prueba = fopen("pruebaaaaaa.txt", "wb+");
     for (int i = 0; i<file_desc->tamano; i++)
     {
         fputc(buffer[i], prueba);
     }
     fclose(prueba);
-    printf("%s\n", buffer);
     printf("bytes leidos = %d\n", bytes_leidos);
     fclose(disco);
 }

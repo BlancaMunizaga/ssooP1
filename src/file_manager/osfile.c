@@ -92,22 +92,20 @@ int os_read(osFile *file_desc, unsigned char *buffer, int nbytes)
     int bytes_leidos = 0;
     if (bytes_r_w + nbytes <= tamano)
     {
-        for (int i = 0; i < nbytes; i++)
+        for (int i = 0; i <= nbytes; i++)
         {
             // sacamos el bloque de datos correspondiente a la cantidad de bytes que ya han sido leidos actualmente
             int numero_bloque_datos = bloque_de_datos(bytes_r_w);
-            
             fseek(disco, file_desc->pos_indice + 5 + (numero_bloque_datos * 3), SEEK_SET);
             unsigned char puntero[3];
             fread(puntero, sizeof(puntero), 1, disco);
             int pos_bloque_datos;
             pos_bloque_datos = puntero[2] + (puntero[1] << 8) + (puntero[0] << 16);
-            int inicio_bloque = inicio_particion + pos_bloque_datos;
+            int inicio_bloque = inicio_particion + pos_bloque_datos*2048;
             int offset = bytes_r_w - (2048*numero_bloque_datos);
-            fseek(disco, inicio_bloque + offset, SEEK_SET);
+            fseek(disco, inicio_bloque + offset - 1, SEEK_SET);
             unsigned char byte_leido[1];
             fread(byte_leido, sizeof(byte_leido), 1, disco);
-            printf("%c", byte_leido[0]);
             buffer[bytes_leidos] = byte_leido[0];
             bytes_r_w += 1;
             bytes_leidos++;
@@ -138,7 +136,7 @@ int os_close(osFile *file_desc)
 // extya
 
 int bloque_de_datos(int byte_r_w)
-// cantidad de bitmaps requeridos para una particion de tamaño
+
 {
     if (byte_r_w % 2048 == 0)
     {
