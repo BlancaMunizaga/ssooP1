@@ -1,10 +1,13 @@
 #include "os_API.h"
 #include "lista_particiones.h"
+#include "error.h"
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
 
+
+extern OS_ERROR errno;
 
 /*FUNCIONES GENERALES*/
 /* 
@@ -21,7 +24,8 @@ void os_mount(char *diskname, int partition)
     file_name = diskname;
     disco = fopen(diskname, "rb+");
     if(disco == NULL){
-        printf("File did not open!\n");
+        errno = 2;
+        os_strerror(errno);
         particion_valida = 0;
         return;
     }
@@ -30,7 +34,8 @@ void os_mount(char *diskname, int partition)
     int pos_mbt = pos_mbt_particion(id_particion); // Obtener pos en la mbt.
 
     if (pos_mbt < 0){
-        printf("La partición de id [%i] no existe o no es válida.\n", id_particion);
+        errno = 3;
+        os_strerror(errno); 
         particion_valida = 0;
     }
     else {
@@ -156,7 +161,8 @@ void os_bitmap(unsigned num)
     }
     else
     {
-        printf("El bloque bitmap ingresado es invalido");
+        errno = 6;
+        os_strerror(errno);
     }
 }
 
@@ -182,7 +188,9 @@ int os_exists(char *filename)
             }
         }
     }
-    printf("El archivo '%s' no existe en esta particion.\n", filename);
+    // printf("El archivo '%s' no existe en esta particion.\n", filename);
+    errno = 1;
+    os_strerror(errno);
     return 0; //  si se recorre todo el directorio sin encontrar el archivo, se retorna 0
 }
 
@@ -253,13 +261,15 @@ void os_create_partition(int id, int size)
     printf("Creando particion de id[%i] y size: %i\n", id, size);
 
     if (id > 127){   // El id es invalido.
-        printf("El id no es valido.\n");
+        // printf("El id no es valido.\n");
+        errno = 7;
+        os_strerror(errno);
         return;
     }
     int pos_libre = pos_libre_mbt();
     if (pos_libre < 0){     // La MBT esta llena (no necesariamente el disco).
-        printf("No existe ninguna posicion libre en la tabla.\n");
-        printf("Elimine una particion e intente de nuevo.\n");
+        errno = 5;
+        os_strerror(errno);
         return;
     }
   
@@ -303,7 +313,8 @@ void os_create_partition(int id, int size)
     }
     lista_destroy(lista_particiones); // Liberar memoria.
     if(seguir){
-        printf("La particion no cabe en el disco.\n");
+        errno = 5;
+        os_strerror(errno);
     }
 }
 
@@ -313,7 +324,8 @@ void os_delete_partition(int id)
     int pos_mbt = pos_mbt_particion(id);
     if (pos_mbt < 0)
     {
-        printf("La partición no existe.\n");
+        errno = 3;
+        os_strerror(errno);
     }
     else
     {
@@ -362,7 +374,8 @@ int os_rm(char *filename)
             }
         }
     }
-    printf("El archivo no existe.\n");
+    errno = 1;
+    os_strerror(errno);
     return 0; //  si se recorre todo el directorio sin encontrar el archivo, se retorna 0
 }
 

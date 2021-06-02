@@ -1,11 +1,5 @@
 #pragma once
 
-typedef enum os_error {
-    OS_SEGFAULT,
-    OS_FILENOTFOUND,
-
-} OS_ERROR;
-
 
 unsigned char tamano_archivo[5];
 

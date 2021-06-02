@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "error.h"
+
+extern OS_ERROR errno;
 
 int find_pos_indice_block(char *filename)
 {
@@ -55,7 +58,7 @@ osFile *os_open(char *filename, char mode)
         }
         else
         {
-            printf("ERROR: Archivo no existe.\n");
+            // printf("ERROR: Archivo no existe.\n");
             return NULL;
         }
     }
@@ -64,7 +67,9 @@ osFile *os_open(char *filename, char mode)
 
         if (exists)
         {
-            printf("ERROR: Archivo con ese nombre ya existe.\n");
+            // printf("ERROR: Archivo con ese nombre ya existe.\n");
+            errno = 8;
+            os_strerror(errno);
             return NULL;
         }
         else
@@ -86,6 +91,11 @@ osFile *os_open(char *filename, char mode)
 
 int os_read(osFile *file_desc, unsigned char *buffer, int nbytes)
 {
+    if (file_desc -> mode != 0){ // Error por modo incorrecto
+        errno = 9;
+        os_strerror(errno);
+        return NULL;
+    }
     int tamano = file_desc->tamano;
     int bytes_r_w = file_desc->bytes_r_w;
     //contador
@@ -139,6 +149,11 @@ int os_read(osFile *file_desc, unsigned char *buffer, int nbytes)
 
 int os_write(osFile *file_desc, unsigned char *buffer, int nbytes)
 {
+    if (file_desc -> mode != 1){ // Error por modo incorrecto
+        errno = 9;
+        os_strerror(errno);
+        return NULL;
+    }
     // ver si cabe lo que se quiere escrir
     // 1 ver cuantos bloques datos va a usar + bloque indece < cantidad bloques libres y verificar que cabe en el bloque directorio
     // escribir entrada  en bloque directorio

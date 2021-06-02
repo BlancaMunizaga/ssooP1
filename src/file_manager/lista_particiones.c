@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "lista_particiones.h"
 
+
 Particion *process_init(int id, long int id_abs, int cantidad_de_bloques)
 {
     Particion *particion = calloc(1, sizeof(Particion));
