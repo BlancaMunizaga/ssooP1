@@ -73,15 +73,17 @@ void os_bitmap(unsigned num)
     {
         //avazamos hasta el incio de la partición y luego avanzamos hacia el incio del bloque de bitmap
         fseek(disco, inicio_particion + (num * 2048), SEEK_SET);
+        int numeros = 0;
         for (int byte = 0; byte < 2048; byte++)
         {
             fread(buffer_byte, sizeof(buffer_byte), 1, disco);
+            numeros++;
             
 
             // fprintf(stderr, "%x", (int) buffer_byte[0]);
             fprintf(stderr, "0x%02X ", (unsigned int) buffer_byte[0] & 0xFF);
 
-            if (byte != 0 && byte % 4 == 0)
+            if (numeros % 4 == 0)
             {
                 fprintf(stderr, "\n");
             }
@@ -120,6 +122,7 @@ void os_bitmap(unsigned num)
     else if (num == 0)
     {
         fseek(disco, inicio_particion + 2048, SEEK_SET);
+        int numeros = 0;
         for (int byte = 0; byte < 2048 * cantidad_bloques_bitmap; byte++)
         {
             fread(buffer_byte, sizeof(buffer_byte), 1, disco);

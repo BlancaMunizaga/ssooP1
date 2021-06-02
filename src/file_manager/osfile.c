@@ -139,6 +139,9 @@ int os_read(osFile *file_desc, unsigned char *buffer, int nbytes)
 
 int os_write(osFile *file_desc, unsigned char *buffer, int nbytes)
 {
+    // ver si cabe lo que se quiere escrir
+    // 1 ver cuantos bloques datos va a usar + bloque indece < cantidad bloques libres y verificar que cabe en el bloque directorio
+    // escribir entrada  en bloque directorio
     int tamano = file_desc->tamano;
     int bytes_r_w = file_desc->bytes_r_w;
     //contador
@@ -189,6 +192,7 @@ int os_write(osFile *file_desc, unsigned char *buffer, int nbytes)
 int os_close(osFile *file_desc)
 {
     free(file_desc);
+    return 0;
 }
 
 // extya
