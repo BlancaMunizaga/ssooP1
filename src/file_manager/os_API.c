@@ -36,7 +36,6 @@ void os_mount(char *diskname, int partition)
     else {
         fseek(disco, pos_mbt, SEEK_SET); // Primer byte de la entrada validez+id_puntero
         fread(buffer_entrada, sizeof(buffer_entrada), 1, disco);
-        int primer_byte = buffer_entrada[0];
         // Leyendo 3 bytes para encontrar el id_absoluto_particion y se guarda en la variable global
         fread(id_absoluto_particion, sizeof(id_absoluto_particion), 1, disco);
         // Leyendo 4 bytes para encontrar la cantidad de bloques de la particion y se guarda en variable global
@@ -80,7 +79,7 @@ void os_bitmap(unsigned num)
             
 
             // fprintf(stderr, "%x", (int) buffer_byte[0]);
-            fprintf(stderr, "0x%02X\n", (unsigned int) buffer_byte[0] & 0xFF);
+            fprintf(stderr, "0x%02X ", (unsigned int) buffer_byte[0] & 0xFF);
 
             if (byte != 0 && byte % 4 == 0)
             {
@@ -124,7 +123,7 @@ void os_bitmap(unsigned num)
         for (int byte = 0; byte < 2048 * cantidad_bloques_bitmap; byte++)
         {
             fread(buffer_byte, sizeof(buffer_byte), 1, disco);
-            fprintf(stderr, "%x", (int) buffer_byte[0]);
+            fprintf(stderr, "0x%02X ", (unsigned int) buffer_byte[0] & 0xFF);
             if (byte != 0 && byte % 4 == 0)
             {
                 fprintf(stderr, "\n");
@@ -172,7 +171,8 @@ int os_exists(char *filename)
             char nombre_archivo[28];
             fread(id_relativo_bloque_indice, sizeof(id_relativo_bloque_indice), 1, disco);
             fread(nombre_archivo, sizeof(nombre_archivo), 1, disco);
-            if (strcmp(nombre_archivo, filename)) // Se compara el nombre del archivo con el que se busca.
+
+            if (strcmp(nombre_archivo, filename) == 0) // Se compara el nombre del archivo con el que se busca.
             {
                 printf("El archivo '%s' si existe.\n", filename);
                 return 1; // Si son iguales se retorna 1
@@ -267,7 +267,7 @@ void os_create_partition(int id, int size)
     int pos = 0;
     bool seguir = true;
 
-    while (current != NULL && seguir)
+    while ((current != NULL) && (seguir))
     {
         if(current->id_abs - pos >= size){
             seguir = false;
@@ -284,8 +284,6 @@ void os_create_partition(int id, int size)
             bytes[5] = (size >> 16) & 0xff;
             bytes[4] = (size >> 24) & 0xff;
 
-            fclose(disco);
-            disco = fopen(file_name, "wb+");
             fseek(disco, pos_libre, SEEK_SET);
 
             for(int i=0; i < 8; i++){
@@ -294,9 +292,6 @@ void os_create_partition(int id, int size)
                 fputc((int) bytes[i], disco);
 
             }
-            fclose(disco);
-            disco = fopen(file_name, "r+b");
-
             printf("Particion creada correctamente.\n");
             return;
         }
@@ -311,7 +306,7 @@ void os_create_partition(int id, int size)
 
 void os_delete_partition(int id)
 {
-    printf("Intentando eliminar la particion id[%i]", id);
+    printf("Intentando eliminar la particion id[%i]\n", id);
     int pos_mbt = pos_mbt_particion(id);
     if (pos_mbt < 0)
     {
@@ -337,7 +332,7 @@ void os_reset_mbt()
         fseek(disco, 8 * id, SEEK_SET); // Primer byte de la entrada.
         fputc(0, disco);
     }
-    print("MBT reseteada.\n");
+    printf("MBT reseteada.\n");
 }
 
 int os_rm(char *filename)
@@ -355,7 +350,7 @@ int os_rm(char *filename)
             char nombre_archivo[28];
             fread(id_relativo_bloque_indice, sizeof(id_relativo_bloque_indice), 1, disco);
             fread(nombre_archivo, sizeof(nombre_archivo), 1, disco);
-            if (strcmp(nombre_archivo, filename)) // Se compara el nombre del archivo con el que se busca.
+            if (strcmp(nombre_archivo, filename) == 0) // Se compara el nombre del archivo con el que se busca.
             {
                 fseek(disco, inicio_particion + 32 * entrada, SEEK_SET);
                 fputc(0, disco); // se cambia el bit de validez a 0.
