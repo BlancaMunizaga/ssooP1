@@ -6,7 +6,7 @@
 
 int main(int argc, char **argv)
 {
-    if (argv[1] == "0") // monta el disco y muestra el masterboot table y luego muestra los archivos  de cada partición
+    if (argv[1] == '0') // monta el disco y muestra el masterboot table y luego muestra los archivos  de cada partición
     {
         for (int i = 0; i < 5; i++)
         {
@@ -24,11 +24,11 @@ int main(int argc, char **argv)
             fclose(disco);
         }
     }
-    else if (argv[1] == "1")
+    else if (argv[1] == '1')
     { // el disco que se quiere montar es invalido porque no existe el archivo
         os_mount("src/discos/disco_no_existe.bin", 0);
     }
-    else if (argv[1] == "2")
+    else if (argv[1] == '2')
     {
         // Ver si un archivo existe.
         char *filename = argv[2];
@@ -43,7 +43,7 @@ int main(int argc, char **argv)
         os_rm(filename);
         fclose(disco);
     }
-    else if (argv[1] == "3")
+    else if (argv[1] == '3')
     { //montamos el disco y mostramos todo el bitmap
         os_mount("src/discos/simdisk.bin", 4);
         printf("Imprimiendo todo el bitmap\n");
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
         os_bitmap(20);
         fclose(disco);
     }
-    else if (argv[1] == "4")
+    else if (argv[1] == '4')
     {
         //Montamos la 4 partición 4
         os_mount("src/discos/simdisk.bin", 4);
@@ -85,7 +85,7 @@ int main(int argc, char **argv)
         os_create_partition(180, 400);
         fclose(disco);
     }
-    else if (argv[1] == "5")
+    else if (argv[1] == '5')
     {
         //Montamos la 4 partición 4
         os_mount("src/discos/simdisk.bin", 4);
