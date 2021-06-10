@@ -8,11 +8,11 @@ int main(int argc, char **argv)
 {
     if (*argv[1] == '0') // monta el disco y muestra el masterboot table y luego muestra los archivos  de cada partición
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 1; i < 5; i++)
         {
             printf("\n\nProbando particion %i\n", i);
             os_mount("src/discos/simdisk.bin", i);
-            if (i == 0)
+            if (i == 1)
             {
                 os_mbt();
             }
