@@ -94,7 +94,7 @@ int main(int argc, char **argv)
     else if (*argv[1] == '5')
     {
         //Montamos la 4 partición 4
-        os_mount("src/discos/simdisk.bin", 4);
+        os_mount("src/discos/simdisk.bin", 2);
         //Usamos os_open para abrir en modo de lectura nene.txt
         osFile *file_desc = os_open("nene.txt", 'r');
         //lo leemos entero
