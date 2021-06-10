@@ -98,6 +98,7 @@ int main(int argc, char **argv)
         //Usamos os_open para abrir en modo de lectura nene.txt
         osFile *file_desc = os_open("nene.txt", 'r');
         //lo leemos entero
+        printf("leemos el tamaño completo\n");
         unsigned char buffer[file_desc->tamano];
         int bytes_leidos = os_read(file_desc, buffer, file_desc->tamano);
         // y escribimos los bytes en un  archivo txt para ver el resultado
@@ -106,7 +107,31 @@ int main(int argc, char **argv)
             printf("%c", buffer[i]);
         }
         os_close(file_desc);
-        printf("bytes leidos = %d\n", bytes_leidos);
+
+        printf("\nbytes leidos = %d\n", bytes_leidos);
+
+        fclose(disco);
+
+        os_mount("src/discos/simdisk.bin", 2);
+        osFile *file_desc = os_open("nene.txt", 'r');
+        printf("Leemos 3000 bytes \n");
+        int bytes_leidos = os_read(file_desc, buffer, 3000);
+        // y escribimos los bytes en un  archivo txt para ver el resultado
+        for (int i = 0; i < 3000; i++)
+        {
+            printf("%c", buffer[i]);
+        }
+        printf("\nbytes leidos = %d\n", bytes_leidos);
+
+        printf("Leemos 521 bytes restante \n");
+        int bytes_leidos = os_read(file_desc, buffer, 521);
+        for (int i = 0; i < 521; i++)
+        {
+            printf("%c", buffer[i]);
+        }
+        os_close(file_desc);
+        printf("\nbytes leidos = %d\n", bytes_leidos);
+
         fclose(disco);
     }
     return 0;
