@@ -112,31 +112,20 @@ int main(int argc, char **argv)
 
         fclose(disco);
 
-        os_mount("src/discos/simdisk.bin", 2);
-        osFile *file_nene = os_open("nene.txt", 'r');
-        unsigned char buffer2[3000];
+        // os_mount("src/discos/simdisk.bin", 2);
+        // osFile *file_nene = os_open("nene.txt", 'r');
+        // unsigned char buffer2[3000];
 
-        printf("Leemos 3000 bytes \n");
-        int bytes_leidos2 = os_read(file_nene, buffer2, 3000);
-        // y escribimos los bytes en un  archivo txt para ver el resultado
-        for (int i = 0; i < 3000; i++)
-        {
-            printf("%c", buffer2[i]);
-        }
-        printf("\nbytes leidos = %d\n", bytes_leidos2);
-
-        printf("Leemos 521 bytes restante \n");
-        unsigned char buffer3[521];
-        int bytes_leidos3 = os_read(file_nene, buffer3, 521);
-
-        for (int i = 0; i < 521; i++)
-        {
-            printf("%c", buffer3[i]);
-        }
-        os_close(file_nene);
-        printf("\nbytes leidos = %d\n", bytes_leidos3);
-
-        fclose(disco);
+        // printf("Leemos 3000 bytes \n");
+        // int bytes_leidos2 = os_read(file_nene, buffer2, 3000);
+        // // y escribimos los bytes en un  archivo txt para ver el resultado
+        // for (int i = 0; i < 3000; i++)
+        // {
+        //     printf("%c", buffer2[i]);
+        // }
+        // printf("\nbytes leidos = %d\n", bytes_leidos2);
+        //os_close(file_nene);
+        // fclose(disco);
     }
     return 0;
 }
