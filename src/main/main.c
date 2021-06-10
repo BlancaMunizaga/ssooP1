@@ -103,4 +103,5 @@ int main(int argc, char **argv)
         printf("bytes leidos = %d\n", bytes_leidos);
         fclose(disco);
     }
+    return 0;
 }
