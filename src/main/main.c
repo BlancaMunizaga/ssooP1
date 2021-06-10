@@ -18,7 +18,7 @@ int main(int argc, char **argv)
             }
             if (particion_valida)
             {
-                prinf("Los archivos de esta partición son:\n");
+                printf("Los archivos de esta partición son:\n");
                 os_ls();
             }
 
