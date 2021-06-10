@@ -82,10 +82,12 @@ int main(int argc, char **argv)
         os_delete_partition(6);
         // Probar errores
         printf("Probando crear una partición demasiado grande: \n");
-        os_create_partition(6, 400000);
+        os_create_partition(6, 40000000);
         // Va a tirar error.
         printf("Probando crear una partición con ID invalido: \n");
         os_create_partition(180, 400);
+        printf("Mostrando mbt\n");
+        os_mbt();
         fclose(disco);
     }
     else if (*argv[1] == '5')
