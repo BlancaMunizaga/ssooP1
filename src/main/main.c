@@ -70,6 +70,7 @@ int main(int argc, char **argv)
         printf("Disco después de la nueva particion: \n");
         os_create_partition(6, 4000);
         //Imprimimos la mbt
+        printf("Mostrando mbt despues de crear nueva partición: \n");
         os_mbt();
         //Borramos la particion
         printf("Disco después de borrar la particion recién creada: \n");
@@ -86,7 +87,7 @@ int main(int argc, char **argv)
         // Va a tirar error.
         printf("Probando crear una partición con ID invalido: \n");
         os_create_partition(180, 400);
-        printf("Mostrando mbt\n");
+        printf("Mostrando mbt despues de errores: \n");
         os_mbt();
         fclose(disco);
     }
