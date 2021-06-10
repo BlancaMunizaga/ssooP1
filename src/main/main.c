@@ -97,7 +97,7 @@ int main(int argc, char **argv)
         // y escribimos los bytes en un  archivo txt para ver el resultado
         for (int i = 0; i < file_desc->tamano; i++)
         {
-            printf("%s", *buffer[i]);
+            printf("%c", buffer[i]);
         }
         os_close(file_desc);
         printf("bytes leidos = %d\n", bytes_leidos);
