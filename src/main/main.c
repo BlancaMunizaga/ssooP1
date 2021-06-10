@@ -34,11 +34,11 @@ int main(int argc, char **argv)
         char *filename = argv[2];
         os_mount("src/discos/simdisk.bin", 4);
         printf("Viendo si existe el archivo [%s]\n", filename);
-        int exists = os_exists(filename);
+        os_exists(filename);
         printf("Borrando el archivo [%s]\n", filename);
         os_rm(filename);
         printf("Intentando ver archivo si existe el archivo recien borrado.\n");
-        int exists = os_exists(filename);
+        os_exists(filename);
         printf("Intentando borrar archivo que no existe \n");
         os_rm(filename);
         fclose(disco);
