@@ -18,6 +18,7 @@ int main(int argc, char **argv)
             }
             if (particion_valida)
             {
+                prinf("Los archivos de esta partición son:\n");
                 os_ls();
             }
 
@@ -37,6 +38,8 @@ int main(int argc, char **argv)
         os_exists(filename);
         printf("Borrando el archivo [%s]\n", filename);
         os_rm(filename);
+        printf("Mostrando que el archivo fue borrado con ls [%s]\n", filename);
+        os_ls();
         printf("Intentando ver archivo si existe el archivo recien borrado.\n");
         os_exists(filename);
         printf("Intentando borrar archivo que no existe \n");
