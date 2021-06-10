@@ -113,7 +113,7 @@ int main(int argc, char **argv)
         fclose(disco);
 
         os_mount("src/discos/simdisk.bin", 2);
-        osFile *file_desc = os_open("nene.txt", 'r');
+        *file_desc = os_open("nene.txt", 'r');
         printf("Leemos 3000 bytes \n");
         int bytes_leidos = os_read(file_desc, buffer, 3000);
         // y escribimos los bytes en un  archivo txt para ver el resultado
